@@ -43,11 +43,15 @@ namespace my_stl
         using reference = const T&;
         using iterator_category = my_stl::random_access_iterator_tag;
     };
-
-
-
-
 }
+template<typename Iterator>
+void my_stl::swap(Iterator __it1,Iterator __it2)
+{
+    typename my_stl::iterator_traits<Iterator>::value_type temp = *__it1;
+    *__it1 = *__it2;
+    *__it2 = temp;
+}
+
 
 
 
