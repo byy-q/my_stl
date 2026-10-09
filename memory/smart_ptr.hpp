@@ -11,12 +11,76 @@ template<typename T>
 class shared_ptr
 {
     public:
+        shared_ptr():data(nullptr),count(0){}
+        shared_ptr(T* pointer):data(pointer){count = new int(1);}
+        shared_ptr(shared_ptr& copy):data(copy.data){
+            *copy.count++;
+            count = copy.count;
+        }
+        shared_ptr(shared_ptr&&)=delete;
+        shared_ptr& operator=(shared_ptr& copy)
+        {
+            data = copy.data;
+            *copy.count++;
+            count = copy.count;
+            return *this;
+        }
 
-
+        shared_ptr& operator=(shared_ptr&&)=delete;
+        ~shared_ptr()
+        {
+            if(*count == 1)
+            {
+                delete data;
+                delete count;
+            }
+            else
+            {
+                *count--;
+            }
+        }
 
     private:
+        T* data;
+        int* count;
+};
 
+template<typename T>
+class shared_ptr<T[]>
+{
+    public:
+        shared_ptr():data(nullptr),count(0){}
+        shared_ptr(T* pointer):data(pointer){count = new int(1);}
+        shared_ptr(shared_ptr& copy):data(copy.data){
+            *copy.count++;
+            count = copy.count;
+        }
+        shared_ptr(shared_ptr&&)=delete;
+        shared_ptr& operator=(shared_ptr& copy)
+        {
+            data = copy.data;
+            *copy.count++;
+            count = copy.count;
+            return *this;
+        }
 
+        shared_ptr& operator=(shared_ptr&&)=delete;
+        ~shared_ptr()
+        {
+            if(*count == 1)
+            {
+                delete[] data;
+                delete count;
+            }
+            else
+            {
+                *count--;
+            }
+        }
+
+    private:
+        T* data;
+        int* count;
 };
 
 template<typename T>
@@ -77,7 +141,7 @@ class unique_ptr<T[]>
         
 
     private:
-        T* data_ptr;
+        T* data_ptr = nullptr;
 };
 
 
